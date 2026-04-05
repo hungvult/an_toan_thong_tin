@@ -1,0 +1,1201 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crypto Solver - An Toàn Thông Tin</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --primary: #6c63ff;
+        --primary-dark: #5a52d5;
+        --primary-light: #8b83ff;
+        --surface: #1e1e2e;
+        --surface-2: #27273a;
+        --surface-3: #2f2f45;
+        --on-surface: #e0e0e0;
+        --on-surface-dim: #a0a0b0;
+        --accent: #ff6b9d;
+        --success: #4caf50;
+        --warn: #ffa726;
+        --radius: 12px;
+        --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        background: #141420;
+        color: var(--on-surface);
+        display: flex;
+        height: 100vh;
+        overflow: hidden;
+      }
+      /* SIDEBAR */
+      .sidebar {
+        width: 280px;
+        background: var(--surface);
+        border-right: 1px solid rgba(255, 255, 255, 0.06);
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+      }
+      .sidebar-header {
+        padding: 24px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .sidebar-header h1 {
+        font-size: 20px;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .sidebar-header p {
+        font-size: 12px;
+        color: var(--on-surface-dim);
+        margin-top: 4px;
+      }
+      .sidebar-nav {
+        flex: 1;
+        overflow-y: auto;
+        padding: 12px 10px;
+      }
+      .nav-group-title {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--on-surface-dim);
+        padding: 12px 10px 6px;
+        font-weight: 600;
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 14px;
+        color: var(--on-surface-dim);
+        margin: 2px 0;
+      }
+      .nav-item:hover {
+        background: rgba(108, 99, 255, 0.1);
+        color: var(--on-surface);
+      }
+      .nav-item.active {
+        background: linear-gradient(
+          135deg,
+          rgba(108, 99, 255, 0.2),
+          rgba(255, 107, 157, 0.1)
+        );
+        color: #fff;
+        font-weight: 500;
+      }
+      .nav-item .material-icons-outlined {
+        font-size: 20px;
+      }
+      /* MAIN */
+      .main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .topbar {
+        height: 56px;
+        background: var(--surface);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        display: flex;
+        align-items: center;
+        padding: 0 28px;
+      }
+      .topbar h2 {
+        font-size: 16px;
+        font-weight: 600;
+      }
+      .content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 28px;
+        display: flex;
+        gap: 24px;
+        flex-wrap: wrap;
+        align-content: flex-start;
+      }
+      /* CARDS */
+      .card {
+        background: var(--surface);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: var(--radius);
+        padding: 24px;
+        flex: 1;
+        min-width: 340px;
+      }
+      .card-title {
+        font-size: 14px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--primary-light);
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .card-title .material-icons-outlined {
+        font-size: 18px;
+      }
+      .form-group {
+        margin-bottom: 16px;
+      }
+      .form-group label {
+        display: block;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--on-surface-dim);
+        margin-bottom: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .form-group input,
+      .form-group textarea,
+      .form-group select {
+        width: 100%;
+        padding: 10px 14px;
+        background: var(--surface-2);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 8px;
+        color: var(--on-surface);
+        font-family: "Inter", sans-serif;
+        font-size: 14px;
+        transition: border-color 0.2s;
+        outline: none;
+      }
+      .form-group input:focus,
+      .form-group textarea:focus,
+      .form-group select:focus {
+        border-color: var(--primary);
+      }
+      .form-group textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+      .form-group select option {
+        background: var(--surface-2);
+      }
+      .btn-row {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+      .btn {
+        padding: 10px 24px;
+        border: none;
+        border-radius: 8px;
+        font-family: "Inter", sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .btn-primary {
+        background: linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-dark)
+        );
+        color: #fff;
+      }
+      .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 16px rgba(108, 99, 255, 0.4);
+      }
+      .btn-secondary {
+        background: var(--surface-3);
+        color: var(--on-surface);
+      }
+      .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+      .result-box {
+        background: var(--surface-2);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 8px;
+        padding: 16px;
+        min-height: 60px;
+        font-family: "Inter", monospace;
+        font-size: 14px;
+        word-break: break-all;
+        white-space: pre-wrap;
+        line-height: 1.6;
+      }
+      .result-box.success {
+        border-left: 3px solid var(--success);
+      }
+      .step-box {
+        background: var(--surface-2);
+        border-radius: 8px;
+        padding: 14px;
+        margin-top: 10px;
+        font-size: 13px;
+        line-height: 1.8;
+        white-space: pre-wrap;
+        color: var(--on-surface-dim);
+        max-height: 300px;
+        overflow-y: auto;
+      }
+      .hidden {
+        display: none !important;
+      }
+      .matrix-input {
+        display: grid;
+        gap: 6px;
+      }
+      .matrix-input input {
+        text-align: center;
+        padding: 8px;
+      }
+      .inline-group {
+        display: flex;
+        gap: 12px;
+      }
+      .inline-group .form-group {
+        flex: 1;
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>🔐 Crypto Solver</h1>
+        <p>An Toàn Thông Tin</p>
+      </div>
+      <nav class="sidebar-nav" id="nav">
+        <div class="nav-group-title">Mã hóa cổ điển</div>
+        <div class="nav-item active" data-cipher="caesar">
+          <span class="material-icons-outlined">text_rotate_up</span>Caesar
+        </div>
+        <div class="nav-item" data-cipher="affine">
+          <span class="material-icons-outlined">functions</span>Affine
+        </div>
+        <div class="nav-item" data-cipher="vigenere">
+          <span class="material-icons-outlined">grid_on</span>Vigenère
+        </div>
+        <div class="nav-item" data-cipher="hill">
+          <span class="material-icons-outlined">grid_3x3</span>Hill
+        </div>
+        <div class="nav-item" data-cipher="playfair">
+          <span class="material-icons-outlined">apps</span>Playfair
+        </div>
+        <div class="nav-item" data-cipher="railfence">
+          <span class="material-icons-outlined">fence</span>Rail Fence
+        </div>
+        <div class="nav-group-title">Mã hóa hiện đại</div>
+        <div class="nav-item" data-cipher="rsa">
+          <span class="material-icons-outlined">enhanced_encryption</span>RSA
+        </div>
+        <div class="nav-item" data-cipher="diffiehellman">
+          <span class="material-icons-outlined">swap_horiz</span>Diffie-Hellman
+        </div>
+        <div class="nav-group-title">Hàm băm & Khác</div>
+        <div class="nav-item" data-cipher="modmath"><span class="material-icons-outlined">calculate</span>Modular Math</div>
+        <div class="nav-group-title">Số học Modulo</div>
+        <div class="nav-item" data-cipher="bieuthumodulo"><span class="material-icons-outlined">percent</span>Biểu Thức Modulo</div>
+        <div class="nav-item" data-cipher="cannguyen"><span class="material-icons-outlined">hub</span>Căn Nguyên Thủy</div>
+        <div class="nav-item" data-cipher="euclid"><span class="material-icons-outlined">schema</span>Euclid</div>
+        <div class="nav-item" data-cipher="euler"><span class="material-icons-outlined">tag</span>Euler φ(n)</div>
+        <div class="nav-item" data-cipher="eulerluytha"><span class="material-icons-outlined">bolt</span>Euler - Lũy Thừa</div>
+        <div class="nav-item" data-cipher="fermat"><span class="material-icons-outlined">science</span>Fermat Nhỏ</div>
+        <div class="nav-item" data-cipher="habacluytha"><span class="material-icons-outlined">compress</span>Hạ Bậc Lũy Thừa</div>
+        <div class="nav-item" data-cipher="logarithm"><span class="material-icons-outlined">show_chart</span>Logarithm Rời Rạc</div>
+        <div class="nav-item" data-cipher="crtgiaihept"><span class="material-icons-outlined">grid_view</span>CRT - Giải Hệ PT</div>
+        <div class="nav-item" data-cipher="crtluytha"><span class="material-icons-outlined">speed</span>CRT - Lũy Thừa</div>
+        <div class="nav-group-title">Mật mã khóa công khai</div>
+        <div class="nav-item" data-cipher="elgamal"><span class="material-icons-outlined">lock</span>ElGamal</div>
+        <div class="nav-item" data-cipher="rsa1"><span class="material-icons-outlined">key</span>RSA - Cơ Bản</div>
+        <div class="nav-item" data-cipher="rsa2"><span class="material-icons-outlined">vpn_key</span>RSA - CRT</div>
+        <div class="nav-item" data-cipher="dsa"><span class="material-icons-outlined">verified</span>DSA</div>
+        <div class="nav-item" data-cipher="aes128"><span class="material-icons-outlined">security</span>AES-128</div>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <div class="topbar"><h2 id="topTitle">Caesar Cipher</h2></div>
+      <div class="content" id="content"></div>
+    </main>
+
+    <script>
+      // --- UTILITY ---
+      function mod(a, m) {
+        return ((a % m) + m) % m;
+      }
+      function gcd(a, b) {
+        a = Math.abs(a);
+        b = Math.abs(b);
+        while (b) {
+          [a, b] = [b, a % b];
+        }
+        return a;
+      }
+      function extGcd(a, b) {
+        if (b === 0) return [a, 1, 0];
+        let [g, x1, y1] = extGcd(b, a % b);
+        return [g, y1, x1 - Math.floor(a / b) * y1];
+      }
+      function modInverse(a, m) {
+        a = mod(a, m);
+        let [g, x] = extGcd(a, m);
+        if (g !== 1) return null;
+        return mod(x, m);
+      }
+      function modPow(base, exp, m) {
+        base = BigInt(base);
+        exp = BigInt(exp);
+        m = BigInt(m);
+        let r = 1n;
+        base = base % m;
+        while (exp > 0n) {
+          if (exp % 2n === 1n) r = (r * base) % m;
+          exp = exp / 2n;
+          base = (base * base) % m;
+        }
+        return Number(r);
+      }
+      function isPrime(n) {
+        if (n < 2) return false;
+        for (let i = 2; i * i <= n; i++) if (n % i === 0) return false;
+        return true;
+      }
+
+      // --- CIPHER PANELS ---
+      const panels = {
+        caesar: () => `
+<div class="card">
+  <div class="card-title"><span class="material-icons-outlined">input</span>Tham số đầu vào</div>
+  <div class="form-group"><label>Plaintext / Ciphertext</label><textarea id="cText" placeholder="Nhập văn bản..."></textarea></div>
+  <div class="form-group"><label>Khóa (shift k, 0-25)</label><input type="number" id="cKey" value="3" min="0" max="25"></div>
+  <div class="form-group"><label>Chế độ</label><select id="cMode"><option value="enc">Mã hóa (Encrypt)</option><option value="dec">Giải mã (Decrypt)</option></select></div>
+  <div class="btn-row"><button class="btn btn-primary" onclick="doCaesar()"><span class="material-icons-outlined">play_arrow</span>Thực hiện</button></div>
+</div>
+<div class="card"><div class="card-title"><span class="material-icons-outlined">output</span>Kết quả</div><div class="result-box" id="cResult">—</div><div class="card-title" style="margin-top:16px"><span class="material-icons-outlined">list_alt</span>Các bước</div><div class="step-box" id="cSteps">—</div></div>`,
+
+        affine: () => `
+<div class="card">
+  <div class="card-title"><span class="material-icons-outlined">input</span>Tham số đầu vào</div>
+  <div class="form-group"><label>Plaintext / Ciphertext</label><textarea id="aText"></textarea></div>
+  <div class="inline-group"><div class="form-group"><label>a (gcd(a,26)=1)</label><input type="number" id="aA" value="5"></div><div class="form-group"><label>b</label><input type="number" id="aB" value="8"></div></div>
+  <div class="form-group"><label>Chế độ</label><select id="aMode"><option value="enc">Mã hóa</option><option value="dec">Giải mã</option></select></div>
+  <div class="btn-row"><button class="btn btn-primary" onclick="doAffine()"><span class="material-icons-outlined">play_arrow</span>Thực hiện</button></div>
+</div>
+<div class="card"><div class="card-title"><span class="material-icons-outlined">output</span>Kết quả</div><div class="result-box" id="aResult">—</div><div class="card-title" style="margin-top:16px"><span class="material-icons-outlined">list_alt</span>Các bước</div><div class="step-box" id="aSteps">—</div></div>`,
+
+        vigenere: () => `
+<div class="card">
+  <div class="card-title"><span class="material-icons-outlined">input</span>Tham số đầu vào</div>
+  <div class="form-group"><label>Plaintext / Ciphertext</label><textarea id="vText"></textarea></div>
+  <div class="form-group"><label>Khóa (key word)</label><input id="vKey" placeholder="VD: SECRET"></div>
+  <div class="form-group"><label>Chế độ</label><select id="vMode"><option value="enc">Mã hóa</option><option value="dec">Giải mã</option></select></div>
+  <div class="btn-row"><button class="btn btn-primary" onclick="doVigenere()"><span class="material-icons-outlined">play_arrow</span>Thực hiện</button></div>
+</div>
+<div class="card"><div class="card-title"><span class="material-icons-outlined">output</span>Kết quả</div><div class="result-box" id="vResult">—</div><div class="card-title" style="margin-top:16px"><span class="material-icons-outlined">list_alt</span>Các bước</div><div class="step-box" id="vSteps">—</div></div>`,
+
+        hill: () => `
+<div class="card">
+  <div class="card-title"><span class="material-icons-outlined">input</span>Tham số đầu vào</div>
+  <div class="form-group"><label>Plaintext / Ciphertext</label><textarea id="hText"></textarea></div>
+  <div class="form-group"><label>Kích thước ma trận khóa</label><select id="hSize" onchange="buildHillMatrix()"><option value="2">2×2</option><option value="3">3×3</option></select></div>
+  <div class="form-group"><label>Ma trận khóa K</label><div class="matrix-input" id="hMatrix"></div></div>
+  <div class="form-group"><label>Chế độ</label><select id="hMode"><option value="enc">Mã hóa</option><option value="dec">Giải mã</option></select></div>
+  <div class="btn-row"><button class="btn btn-primary" onclick="doHill()"><span class="material-icons-outlined">play_arrow</span>Thực hiện</button></div>
+</div>
+<div class="card"><div class="card-title"><span class="material-icons-outlined">output</span>Kết quả</div><div class="result-box" id="hResult">—</div><div class="card-title" style="margin-top:16px"><span class="material-icons-outlined">list_alt</span>Các bước</div><div class="step-box" id="hSteps">—</div></div>`,
+
+        playfair: () => `
+<div class="card">
+  <div class="card-title"><span class="material-icons-outlined">input</span>Tham số đầu vào</div>
+  <div class="form-group"><label>Plaintext / Ciphertext</label><textarea id="pText"></textarea></div>
+  <div class="form-group"><label>Khóa</label><input id="pKey" placeholder="VD: MONARCHY"></div>
+  <div class="form-group"><label>Chế độ</label><select id="pMode"><option value="enc">Mã hóa</option><option value="dec">Giải mã</option></select></div>
+  <div class="btn-row"><button class="btn btn-primary" onclick="doPlayfair()"><span class="material-icons-outlined">play_arrow</span>Thực hiện</button></div>
+</div>
+<div class="card"><div class="card-title"><span class="material-icons-outlined">output</span>Kết quả</div><div class="result-box" id="pResult">—</div><div class="card-title" style="margin-top:16px"><span class="material-icons-outlined">list_alt</span>Các bước</div><div class="step-box" id="pSteps">—</div></div>`,
+
+        railfence: () => `
+<div class="card">
+  <div class="card-title"><span class="material-icons-outlined">input</span>Tham số đầu vào</div>
+  <div class="form-group"><label>Plaintext / Ciphertext</label><textarea id="rfText"></textarea></div>
+  <div class="form-group"><label>Số hàng (rails)</label><input type="number" id="rfKey" value="3" min="2"></div>
+  <div class="form-group"><label>Chế độ</label><select id="rfMode"><option value="enc">Mã hóa</option><option value="dec">Giải mã</option></select></div>
+  <div class="btn-row"><button class="btn btn-primary" onclick="doRailFence()"><span class="material-icons-outlined">play_arrow</span>Thực hiện</button></div>
+</div>
+<div class="card"><div class="card-title"><span class="material-icons-outlined">output</span>Kết quả</div><div class="result-box" id="rfResult">—</div><div class="card-title" style="margin-top:16px"><span class="material-icons-outlined">list_alt</span>Các bước</div><div class="step-box" id="rfSteps">—</div></div>`,
+
+        rsa: () => `
+<div class="card">
+  <div class="card-title"><span class="material-icons-outlined">input</span>Tham số đầu vào</div>
+  <div class="inline-group"><div class="form-group"><label>p (số nguyên tố)</label><input type="number" id="rP" value="61"></div><div class="form-group"><label>q (số nguyên tố)</label><input type="number" id="rQ" value="53"></div></div>
+  <div class="form-group"><label>e (public exponent)</label><input type="number" id="rE" value="17"></div>
+  <div class="form-group"><label>Plaintext M (số nguyên)</label><input type="number" id="rM" value="65"></div>
+  <div class="btn-row"><button class="btn btn-primary" onclick="doRSA()"><span class="material-icons-outlined">play_arrow</span>Tính toán</button></div>
+</div>
+<div class="card"><div class="card-title"><span class="material-icons-outlined">output</span>Kết quả</div><div class="result-box" id="rResult">—</div><div class="card-title" style="margin-top:16px"><span class="material-icons-outlined">list_alt</span>Các bước</div><div class="step-box" id="rSteps">—</div></div>`,
+
+        diffiehellman: () => `
+<div class="card">
+  <div class="card-title"><span class="material-icons-outlined">input</span>Tham số đầu vào</div>
+  <div class="inline-group"><div class="form-group"><label>p (số nguyên tố)</label><input type="number" id="dhP" value="23"></div><div class="form-group"><label>g (generator)</label><input type="number" id="dhG" value="5"></div></div>
+  <div class="inline-group"><div class="form-group"><label>a (bí mật Alice)</label><input type="number" id="dhA" value="6"></div><div class="form-group"><label>b (bí mật Bob)</label><input type="number" id="dhB" value="15"></div></div>
+  <div class="btn-row"><button class="btn btn-primary" onclick="doDH()"><span class="material-icons-outlined">play_arrow</span>Tính toán</button></div>
+</div>
+<div class="card"><div class="card-title"><span class="material-icons-outlined">output</span>Kết quả</div><div class="result-box" id="dhResult">—</div><div class="card-title" style="margin-top:16px"><span class="material-icons-outlined">list_alt</span>Các bước</div><div class="step-box" id="dhSteps">—</div></div>`,
+
+        modmath: () => `
+<div class="card">
+  <div class="card-title"><span class="material-icons-outlined">input</span>Modular Arithmetic</div>
+  <div class="form-group"><label>Phép tính</label><select id="mmOp"><option value="modinv">Nghịch đảo modular (a⁻¹ mod m)</option><option value="modpow">Lũy thừa modular (a^b mod m)</option><option value="gcd">GCD(a, b)</option><option value="extgcd">Extended GCD(a, b)</option></select></div>
+  <div class="inline-group"><div class="form-group"><label>a</label><input type="number" id="mmA" value="7"></div><div class="form-group"><label>b / m</label><input type="number" id="mmB" value="26"></div></div>
+  <div class="form-group hidden" id="mmCGroup"><label>m (cho modpow)</label><input type="number" id="mmC" value="13"></div>
+  <div class="btn-row"><button class="btn btn-primary" onclick="doModMath()"><span class="material-icons-outlined">play_arrow</span>Tính</button></div>
+</div>
+<div class="card"><div class="card-title"><span class="material-icons-outlined">output</span>Kết quả</div><div class="result-box" id="mmResult">—</div><div class="card-title" style="margin-top:16px"><span class="material-icons-outlined">list_alt</span>Các bước</div><div class="step-box" id="mmSteps">—</div></div>`,
+      };
+
+      // --- NAVIGATION ---
+      const titles = {
+        caesar:"Caesar Cipher",affine:"Affine Cipher",vigenere:"Vigenère Cipher",hill:"Hill Cipher",playfair:"Playfair Cipher",railfence:"Rail Fence Cipher",rsa:"RSA",diffiehellman:"Diffie-Hellman",modmath:"Modular Math",
+        bieuthumodulo:"Biểu Thức Modulo",cannguyen:"Căn Nguyên Thủy",euclid:"Euclid (Extended GCD)",euler:"Euler φ(n)",eulerluytha:"Euler - Lũy Thừa",fermat:"Fermat Nhỏ",habacluytha:"Hạ Bậc Lũy Thừa",logarithm:"Logarithm Rời Rạc",crtgiaihept:"CRT - Giải Hệ Phương Trình",crtluytha:"CRT - Tính Lũy Thừa",elgamal:"ElGamal",rsa1:"RSA - Cơ Bản",rsa2:"RSA - Giải Mã CRT",dsa:"DSA",aes128:"AES-128",
+      };
+      function mkCard(id,html){return`<div class="card"><div class="card-title"><span class="material-icons-outlined">output</span>Kết quả</div><div class="result-box" id="${id}Result">—</div><div class="card-title" style="margin-top:16px"><span class="material-icons-outlined">list_alt</span>Các bước</div><div class="step-box" id="${id}Steps">—</div></div>`+html;}
+      Object.assign(panels,{
+bieuthumodulo:()=>`<div class="card"><div class="card-title"><span class="material-icons-outlined">input</span>Tham số</div><div class="form-group"><label>Biểu thức (dùng JS: *, **, %)</label><input id="btExpr" value="3**7 + 2*5"></div><div class="form-group"><label>Modulo n</label><input type="number" id="btN" value="13"></div><div class="btn-row"><button class="btn btn-primary" onclick="doBT()"><span class="material-icons-outlined">play_arrow</span>Tính</button></div></div><div class="card"><div class="card-title"><span class="material-icons-outlined">output</span>Kết quả</div><div class="result-box" id="btResult">—</div><div class="card-title" style="margin-top:16px"><span class="material-icons-outlined">list_alt</span>Các bước</div><div class="step-box" id="btSteps">—</div></div>`,
+cannguyen:()=>`<div class="card"><div class="card-title"><span class="material-icons-outlined">input</span>Tham số</div><div class="form-group"><label>n</label><input type="number" id="cnN" value="7"></div><div class="btn-row"><button class="btn btn-primary" onclick="doCN()"><span class="material-icons-outlined">play_arrow</span>Tìm căn nguyên thủy</button></div></div><div class="card"><div class="card-title"><span class="material-icons-outlined">output</span>Kết quả</div><div class="result-box" id="cnResult">—</div><div class="card-title" style="margin-top:16px"><span class="material-icons-outlined">list_alt</span>Các bước</div><div class="step-box" id="cnSteps">—</div></div>`,
+euclid:()=>`<div class="card"><div class="card-title"><span class="material-icons-outlined">input</span>Tham số</div><div class="inline-group"><div class="form-group"><label>a</label><input type="number" id="ecA" value="35"></div><div class="form-group"><label>b</label><input type="number" id="ecB" value="15"></div></div><div class="btn-row"><button class="btn btn-primary" onclick="doEC()"><span class="material-icons-outlined">play_arrow</span>Tính</button></div></div><div class="card"><div class="card-title"><span class="material-icons-outlined">output</span>Kết quả</div><div class="result-box" id="ecResult">—</div><div class="card-title" style="margin-top:16px"><span class="material-icons-outlined">list_alt</span>Các bước</div><div class="step-box" id="ecSteps">—</div></div>`,
+euler:()=>`<div class="card"><div class="card-title"><span class="material-icons-outlined">input</span>Tham số</div><div class="form-group"><label>n</label><input type="number" id="euN" value="36"></div><div class="btn-row"><button class="btn btn-primary" onclick="doEU()"><span class="material-icons-outlined">play_arrow</span>Tính φ(n)</button></div></div><div class="card"><div class="card-title"><span class="material-icons-outlined">output</span>Kết quả</div><div class="result-box" id="euResult">—</div><div class="card-title" style="margin-top:16px"><span class="material-icons-outlined">list_alt</span>Các bước</div><div class="step-box" id="euSteps">—</div></div>`,
+eulerluytha:()=>`<div class="card"><div class="card-title"><span class="material-icons-outlined">input</span>Tham số</div><div class="form-group"><label>a</label><input type="number" id="eltA" value="3"></div><div class="form-group"><label>b (số mũ)</label><input type="number" id="eltB" value="100"></div><div class="form-group"><label>n (modulo)</label><input type="number" id="eltN" value="35"></div><div class="btn-row"><button class="btn btn-primary" onclick="doELT()"><span class="material-icons-outlined">play_arrow</span>Tính a^b mod n</button></div></div><div class="card"><div class="card-title"><span class="material-icons-outlined">output</span>Kết quả</div><div class="result-box" id="eltResult">—</div><div class="card-title" style="margin-top:16px"><span class="material-icons-outlined">list_alt</span>Các bước</div><div class="step-box" id="eltSteps">—</div></div>`,
+fermat:()=>`<div class="card"><div class="card-title"><span class="material-icons-outlined">input</span>Tham số</div><div class="form-group"><label>a</label><input type="number" id="ftA" value="3"></div><div class="form-group"><label>p (số nguyên tố)</label><input type="number" id="ftP" value="7"></div><div class="form-group"><label>b (số mũ cần tính a^b mod p)</label><input type="number" id="ftB" value="100"></div><div class="btn-row"><button class="btn btn-primary" onclick="doFT()"><span class="material-icons-outlined">play_arrow</span>Tính</button></div></div><div class="card"><div class="card-title"><span class="material-icons-outlined">output</span>Kết quả</div><div class="result-box" id="ftResult">—</div><div class="card-title" style="margin-top:16px"><span class="material-icons-outlined">list_alt</span>Các bước</div><div class="step-box" id="ftSteps">—</div></div>`,
+habacluytha:()=>`<div class="card"><div class="card-title"><span class="material-icons-outlined">input</span>Tham số</div><div class="form-group"><label>a (cơ số)</label><input type="number" id="hblA" value="7"></div><div class="form-group"><label>b (số mũ lớn)</label><input type="number" id="hblB" value="327"></div><div class="form-group"><label>n (modulo)</label><input type="number" id="hblN" value="13"></div><div class="btn-row"><button class="btn btn-primary" onclick="doHBL()"><span class="material-icons-outlined">play_arrow</span>Hạ bậc & Tính</button></div></div><div class="card"><div class="card-title"><span class="material-icons-outlined">output</span>Kết quả</div><div class="result-box" id="hblResult">—</div><div class="card-title" style="margin-top:16px"><span class="material-icons-outlined">list_alt</span>Các bước</div><div class="step-box" id="hblSteps">—</div></div>`,
+logarithm:()=>`<div class="card"><div class="card-title"><span class="material-icons-outlined">input</span>Tham số — Tìm x: g^x ≡ h (mod p)</div><div class="inline-group"><div class="form-group"><label>g (base)</label><input type="number" id="logG" value="2"></div><div class="form-group"><label>h (target)</label><input type="number" id="logH" value="22"></div></div><div class="form-group"><label>p (modulo nguyên tố)</label><input type="number" id="logP" value="29"></div><div class="btn-row"><button class="btn btn-primary" onclick="doLOG()"><span class="material-icons-outlined">play_arrow</span>Tính (Baby-step Giant-step)</button></div></div><div class="card"><div class="card-title"><span class="material-icons-outlined">output</span>Kết quả</div><div class="result-box" id="logResult">—</div><div class="card-title" style="margin-top:16px"><span class="material-icons-outlined">list_alt</span>Các bước</div><div class="step-box" id="logSteps">—</div></div>`,
+crtgiaihept:()=>`<div class="card"><div class="card-title"><span class="material-icons-outlined">input</span>Hệ PT: x ≡ rᵢ (mod mᵢ)</div><div class="inline-group"><div class="form-group"><label>r₁</label><input type="number" id="cr0r" value="2"></div><div class="form-group"><label>m₁</label><input type="number" id="cr0m" value="3"></div></div><div class="inline-group"><div class="form-group"><label>r₂</label><input type="number" id="cr1r" value="3"></div><div class="form-group"><label>m₂</label><input type="number" id="cr1m" value="5"></div></div><div class="inline-group"><div class="form-group"><label>r₃</label><input type="number" id="cr2r" value="2"></div><div class="form-group"><label>m₃</label><input type="number" id="cr2m" value="7"></div></div><div class="btn-row"><button class="btn btn-primary" onclick="doCRT()"><span class="material-icons-outlined">play_arrow</span>Giải hệ</button></div></div><div class="card"><div class="card-title"><span class="material-icons-outlined">output</span>Kết quả</div><div class="result-box" id="crtResult">—</div><div class="card-title" style="margin-top:16px"><span class="material-icons-outlined">list_alt</span>Các bước</div><div class="step-box" id="crtSteps">—</div></div>`,
+crtluytha:()=>`<div class="card"><div class="card-title"><span class="material-icons-outlined">input</span>Tính a^b mod n (n=p×q) bằng CRT</div><div class="inline-group"><div class="form-group"><label>a</label><input type="number" id="cltA" value="7"></div><div class="form-group"><label>b</label><input type="number" id="cltB" value="327"></div></div><div class="inline-group"><div class="form-group"><label>p (nguyên tố)</label><input type="number" id="cltP" value="11"></div><div class="form-group"><label>q (nguyên tố)</label><input type="number" id="cltQ" value="13"></div></div><div class="btn-row"><button class="btn btn-primary" onclick="doCLT()"><span class="material-icons-outlined">play_arrow</span>Tính</button></div></div><div class="card"><div class="card-title"><span class="material-icons-outlined">output</span>Kết quả</div><div class="result-box" id="cltResult">—</div><div class="card-title" style="margin-top:16px"><span class="material-icons-outlined">list_alt</span>Các bước</div><div class="step-box" id="cltSteps">—</div></div>`,
+elgamal:()=>`<div class="card"><div class="card-title"><span class="material-icons-outlined">input</span>Tham số ElGamal</div><div class="inline-group"><div class="form-group"><label>p (nguyên tố)</label><input type="number" id="egP" value="23"></div><div class="form-group"><label>g (generator)</label><input type="number" id="egG" value="5"></div></div><div class="inline-group"><div class="form-group"><label>x (khóa bí mật)</label><input type="number" id="egX" value="6"></div><div class="form-group"><label>k (số ngẫu nhiên)</label><input type="number" id="egK" value="3"></div></div><div class="form-group"><label>M (bản rõ)</label><input type="number" id="egM" value="10"></div><div class="form-group"><label>Chế độ</label><select id="egMode"><option value="enc">Mã hóa</option><option value="dec">Giải mã</option></select></div><div class="inline-group" id="egC1Row"><div class="form-group"><label>C1 (giải mã)</label><input type="number" id="egC1" value="10"></div><div class="form-group"><label>C2 (giải mã)</label><input type="number" id="egC2" value="7"></div></div><div class="btn-row"><button class="btn btn-primary" onclick="doEG()"><span class="material-icons-outlined">play_arrow</span>Thực hiện</button></div></div><div class="card"><div class="card-title"><span class="material-icons-outlined">output</span>Kết quả</div><div class="result-box" id="egResult">—</div><div class="card-title" style="margin-top:16px"><span class="material-icons-outlined">list_alt</span>Các bước</div><div class="step-box" id="egSteps">—</div></div>`,
+rsa1:()=>`<div class="card"><div class="card-title"><span class="material-icons-outlined">input</span>RSA – Nhập các số M cách nhau bởi dấu phẩy</div><div class="inline-group"><div class="form-group"><label>p</label><input type="number" id="r1P" value="61"></div><div class="form-group"><label>q</label><input type="number" id="r1Q" value="53"></div></div><div class="form-group"><label>e</label><input type="number" id="r1E" value="17"></div><div class="form-group"><label>Danh sách M (hoặc C) cách dấu phẩy</label><input id="r1Input" value="65,77,83"></div><div class="form-group"><label>Chế độ</label><select id="r1Mode"><option value="enc">Mã hóa</option><option value="dec">Giải mã</option></select></div><div class="btn-row"><button class="btn btn-primary" onclick="doR1()"><span class="material-icons-outlined">play_arrow</span>Thực hiện</button></div></div><div class="card"><div class="card-title"><span class="material-icons-outlined">output</span>Kết quả</div><div class="result-box" id="r1Result">—</div><div class="card-title" style="margin-top:16px"><span class="material-icons-outlined">list_alt</span>Các bước</div><div class="step-box" id="r1Steps">—</div></div>`,
+rsa2:()=>`<div class="card"><div class="card-title"><span class="material-icons-outlined">input</span>RSA Giải mã bằng CRT</div><div class="inline-group"><div class="form-group"><label>p</label><input type="number" id="r2P" value="61"></div><div class="form-group"><label>q</label><input type="number" id="r2Q" value="53"></div></div><div class="inline-group"><div class="form-group"><label>e</label><input type="number" id="r2E" value="17"></div><div class="form-group"><label>C (bản mã)</label><input type="number" id="r2C" value="2790"></div></div><div class="btn-row"><button class="btn btn-primary" onclick="doR2()"><span class="material-icons-outlined">play_arrow</span>Giải mã CRT</button></div></div><div class="card"><div class="card-title"><span class="material-icons-outlined">output</span>Kết quả</div><div class="result-box" id="r2Result">—</div><div class="card-title" style="margin-top:16px"><span class="material-icons-outlined">list_alt</span>Các bước</div><div class="step-box" id="r2Steps">—</div></div>`,
+dsa:()=>`<div class="card"><div class="card-title"><span class="material-icons-outlined">input</span>Tham số DSA</div><div class="inline-group"><div class="form-group"><label>p (nguyên tố)</label><input type="number" id="dsaP" value="23"></div><div class="form-group"><label>q (ước của p-1)</label><input type="number" id="dsaQ" value="11"></div></div><div class="inline-group"><div class="form-group"><label>g (generator)</label><input type="number" id="dsaG" value="6"></div><div class="form-group"><label>x (khóa bí mật)</label><input type="number" id="dsaX" value="8"></div></div><div class="inline-group"><div class="form-group"><label>k (ngẫu nhiên)</label><input type="number" id="dsaK" value="5"></div><div class="form-group"><label>H (hash)</label><input type="number" id="dsaH" value="9"></div></div><div class="btn-row"><button class="btn btn-primary" onclick="doDSA2()"><span class="material-icons-outlined">play_arrow</span>Ký & Xác minh</button></div></div><div class="card"><div class="card-title"><span class="material-icons-outlined">output</span>Kết quả</div><div class="result-box" id="dsaResult">—</div><div class="card-title" style="margin-top:16px"><span class="material-icons-outlined">list_alt</span>Các bước</div><div class="step-box" id="dsaSteps">—</div></div>`,
+aes128:()=>`<div class="card"><div class="card-title"><span class="material-icons-outlined">input</span>AES-128 (Hex Input)</div><div class="form-group"><label>Plaintext (32 hex chars = 16 bytes)</label><input id="aesPlain" value="00112233445566778899aabbccddeeff" placeholder="32 hex ký tự"></div><div class="form-group"><label>Key (32 hex chars = 16 bytes)</label><input id="aesKey" value="000102030405060708090a0b0c0d0e0f" placeholder="32 hex ký tự"></div><div class="form-group"><label>Chế độ</label><select id="aesMode"><option value="enc">Mã hóa</option><option value="dec">Giải mã</option></select></div><div class="btn-row"><button class="btn btn-primary" onclick="doAES()"><span class="material-icons-outlined">play_arrow</span>Thực hiện</button></div></div><div class="card"><div class="card-title"><span class="material-icons-outlined">output</span>Kết quả</div><div class="result-box" id="aesResult">—</div><div class="card-title" style="margin-top:16px"><span class="material-icons-outlined">list_alt</span>Các bước (rounds)</div><div class="step-box" id="aesSteps">—</div></div>`,
+      });
+      document.querySelectorAll(".nav-item").forEach((el) => {
+        el.addEventListener("click", () => {
+          document
+            .querySelectorAll(".nav-item")
+            .forEach((n) => n.classList.remove("active"));
+          el.classList.add("active");
+          const c = el.dataset.cipher;
+          document.getElementById("topTitle").textContent = titles[c];
+          document.getElementById("content").innerHTML = panels[c]();
+          if (c === "hill") buildHillMatrix();
+          if (c === "modmath")
+            document
+              .getElementById("mmOp")
+              .addEventListener("change", function () {
+                document
+                  .getElementById("mmCGroup")
+                  .classList.toggle("hidden", this.value !== "modpow");
+              });
+        });
+      });
+      // init
+      document.getElementById("content").innerHTML = panels.caesar();
+
+      // --- CAESAR ---
+      function doCaesar() {
+        const text = document.getElementById("cText").value;
+        const k = parseInt(document.getElementById("cKey").value) || 0;
+        const enc = document.getElementById("cMode").value === "enc";
+        let res = "",
+          steps = [];
+        const shift = enc ? k : 26 - k;
+        steps.push(
+          `Chế độ: ${enc ? "Mã hóa" : "Giải mã"}, k=${k}, shift thực tế=${shift}`,
+        );
+        for (let ch of text) {
+          if (/[a-z]/i.test(ch)) {
+            const base = ch === ch.toUpperCase() ? 65 : 97;
+            const old = ch.charCodeAt(0) - base;
+            const nw = mod(old + shift, 26);
+            res += String.fromCharCode(nw + base);
+            steps.push(
+              `${ch}(${old}) → (${old}+${shift}) mod 26 = ${nw} → ${String.fromCharCode(nw + base)}`,
+            );
+          } else {
+            res += ch;
+          }
+        }
+        document.getElementById("cResult").textContent = res;
+        document.getElementById("cResult").className = "result-box success";
+        document.getElementById("cSteps").textContent = steps.join("\n");
+      }
+
+      // --- AFFINE ---
+      function doAffine() {
+        const text = document.getElementById("aText").value;
+        const a = parseInt(document.getElementById("aA").value);
+        const b = parseInt(document.getElementById("aB").value);
+        const enc = document.getElementById("aMode").value === "enc";
+        let steps = [],
+          res = "";
+        if (gcd(a, 26) !== 1) {
+          document.getElementById("aResult").textContent =
+            "Lỗi: gcd(a,26) phải = 1!";
+          return;
+        }
+        const aInv = modInverse(a, 26);
+        steps.push(
+          enc
+            ? `E(x) = (${a}·x + ${b}) mod 26`
+            : `D(y) = ${aInv}·(y - ${b}) mod 26, a⁻¹=${aInv}`,
+        );
+        for (let ch of text) {
+          if (/[a-z]/i.test(ch)) {
+            const base = ch === ch.toUpperCase() ? 65 : 97;
+            const x = ch.charCodeAt(0) - base;
+            const y = enc ? mod(a * x + b, 26) : mod(aInv * (x - b), 26);
+            res += String.fromCharCode(y + base);
+            steps.push(
+              enc
+                ? `${ch}(${x}) → (${a}·${x}+${b}) mod 26 = ${y} → ${String.fromCharCode(y + base)}`
+                : `${ch}(${x}) → ${aInv}·(${x}-${b}) mod 26 = ${y} → ${String.fromCharCode(y + base)}`,
+            );
+          } else {
+            res += ch;
+          }
+        }
+        document.getElementById("aResult").textContent = res;
+        document.getElementById("aResult").className = "result-box success";
+        document.getElementById("aSteps").textContent = steps.join("\n");
+      }
+
+      // --- VIGENERE ---
+      function doVigenere() {
+        const text = document.getElementById("vText").value;
+        const key = document
+          .getElementById("vKey")
+          .value.toUpperCase()
+          .replace(/[^A-Z]/g, "");
+        const enc = document.getElementById("vMode").value === "enc";
+        if (!key) {
+          document.getElementById("vResult").textContent = "Nhập khóa!";
+          return;
+        }
+        let res = "",
+          steps = [],
+          ki = 0;
+        steps.push(`Key: ${key}`);
+        for (let ch of text) {
+          if (/[a-z]/i.test(ch)) {
+            const base = ch === ch.toUpperCase() ? 65 : 97;
+            const x = ch.charCodeAt(0) - base;
+            const k = key.charCodeAt(ki % key.length) - 65;
+            const y = enc ? mod(x + k, 26) : mod(x - k, 26);
+            res += String.fromCharCode(y + base);
+            steps.push(
+              `${ch}(${x}) ${enc ? "+" : "-"} ${key[ki % key.length]}(${k}) mod 26 = ${y} → ${String.fromCharCode(y + base)}`,
+            );
+            ki++;
+          } else {
+            res += ch;
+          }
+        }
+        document.getElementById("vResult").textContent = res;
+        document.getElementById("vResult").className = "result-box success";
+        document.getElementById("vSteps").textContent = steps.join("\n");
+      }
+
+      // --- HILL ---
+      function buildHillMatrix() {
+        const n = parseInt(document.getElementById("hSize").value);
+        const div = document.getElementById("hMatrix");
+        div.style.gridTemplateColumns = `repeat(${n},1fr)`;
+        div.innerHTML = "";
+        const def2 = [
+            [3, 3],
+            [2, 5],
+          ],
+          def3 = [
+            [6, 24, 1],
+            [13, 16, 10],
+            [20, 17, 15],
+          ];
+        for (let i = 0; i < n; i++)
+          for (let j = 0; j < n; j++) {
+            const inp = document.createElement("input");
+            inp.type = "number";
+            inp.id = `hm${i}${j}`;
+            inp.value = n === 2 ? def2[i][j] : def3[i][j];
+            div.appendChild(inp);
+          }
+      }
+
+      function getHillMatrix() {
+        const n = parseInt(document.getElementById("hSize").value);
+        let m = [];
+        for (let i = 0; i < n; i++) {
+          m[i] = [];
+          for (let j = 0; j < n; j++)
+            m[i][j] =
+              parseInt(document.getElementById(`hm${i}${j}`).value) || 0;
+        }
+        return m;
+      }
+
+      function matMul(A, B, m) {
+        const n = A.length;
+        let C = [];
+        for (let i = 0; i < n; i++) {
+          C[i] = [];
+          for (let j = 0; j < B[0].length; j++) {
+            let s = 0;
+            for (let k = 0; k < n; k++) s += A[i][k] * B[k][j];
+            C[i][j] = mod(s, m);
+          }
+        }
+        return C;
+      }
+
+      function matDet(M, m) {
+        const n = M.length;
+        if (n === 2) return mod(M[0][0] * M[1][1] - M[0][1] * M[1][0], m);
+        let det = 0;
+        for (let j = 0; j < n; j++) {
+          let sub = [];
+          for (let i = 1; i < n; i++) {
+            let row = [];
+            for (let k = 0; k < n; k++) if (k !== j) row.push(M[i][k]);
+            sub.push(row);
+          }
+          det += (j % 2 === 0 ? 1 : -1) * M[0][j] * matDet(sub, m);
+        }
+        return mod(det, m);
+      }
+
+      function matInv(M, m) {
+        const n = M.length;
+        const det = matDet(M, m);
+        const detInv = modInverse(det, m);
+        if (detInv === null) return null;
+        if (n === 2) {
+          return [
+            [mod(detInv * M[1][1], m), mod(detInv * -M[0][1], m)],
+            [mod(detInv * -M[1][0], m), mod(detInv * M[0][0], m)],
+          ];
+        }
+        let adj = [];
+        for (let i = 0; i < n; i++) {
+          adj[i] = [];
+          for (let j = 0; j < n; j++) {
+            let sub = [];
+            for (let r = 0; r < n; r++)
+              if (r !== j) {
+                let row = [];
+                for (let c = 0; c < n; c++) if (c !== i) row.push(M[r][c]);
+                sub.push(row);
+              }
+            adj[i][j] = mod(
+              detInv * ((i + j) % 2 === 0 ? 1 : -1) * matDet(sub, m),
+              m,
+            );
+          }
+        }
+        return adj;
+      }
+
+      function doHill() {
+        const text = document
+          .getElementById("hText")
+          .value.toUpperCase()
+          .replace(/[^A-Z]/g, "");
+        const K = getHillMatrix();
+        const n = K.length;
+        const enc = document.getElementById("hMode").value === "enc";
+        let steps = [],
+          res = "";
+        steps.push(
+          `Ma trận K = [${K.map((r) => "[" + r.join(",") + "]").join(", ")}]`,
+        );
+        let M = K;
+        if (!enc) {
+          M = matInv(K, 26);
+          if (!M) {
+            document.getElementById("hResult").textContent =
+              "Ma trận không khả nghịch mod 26!";
+            return;
+          }
+          steps.push(
+            `K⁻¹ mod 26 = [${M.map((r) => "[" + r.join(",") + "]").join(", ")}]`,
+          );
+        }
+        let padded = text;
+        while (padded.length % n !== 0) padded += "X";
+        steps.push(`Text (padded): ${padded}`);
+        for (let i = 0; i < padded.length; i += n) {
+          let vec = [];
+          for (let j = 0; j < n; j++) vec.push([padded.charCodeAt(i + j) - 65]);
+          let rv = matMul(M, vec, 26);
+          let block = "";
+          for (let j = 0; j < n; j++)
+            block += String.fromCharCode(rv[j][0] + 65);
+          res += block;
+          steps.push(
+            `[${vec.map((v) => v[0]).join(",")}] → [${rv.map((v) => v[0]).join(",")}] → ${block}`,
+          );
+        }
+        document.getElementById("hResult").textContent = res;
+        document.getElementById("hResult").className = "result-box success";
+        document.getElementById("hSteps").textContent = steps.join("\n");
+      }
+
+      // --- PLAYFAIR ---
+      function doPlayfair() {
+        const key = document
+          .getElementById("pKey")
+          .value.toUpperCase()
+          .replace(/[^A-Z]/g, "")
+          .replace(/J/g, "I");
+        const enc = document.getElementById("pMode").value === "enc";
+        let text = document
+          .getElementById("pText")
+          .value.toUpperCase()
+          .replace(/[^A-Z]/g, "")
+          .replace(/J/g, "I");
+        let steps = [];
+        // build matrix
+        let used = {},
+          grid = [],
+          flat = "";
+        for (let c of key + "ABCDEFGHIKLMNOPQRSTUVWXYZ") {
+          if (!used[c]) {
+            used[c] = true;
+            flat += c;
+          }
+        }
+        for (let i = 0; i < 5; i++) grid.push(flat.slice(i * 5, i * 5 + 5));
+        steps.push(
+          `Ma trận Playfair:\n${grid.map((r) => r.split("").join(" ")).join("\n")}`,
+        );
+        let pos = {};
+        for (let i = 0; i < 5; i++)
+          for (let j = 0; j < 5; j++) pos[grid[i][j]] = { r: i, c: j };
+        // prepare pairs
+        let pairs = [];
+        for (let i = 0; i < text.length; i += 2) {
+          if (i + 1 >= text.length) {
+            pairs.push([text[i], "X"]);
+          } else if (text[i] === text[i + 1]) {
+            pairs.push([text[i], "X"]);
+            i--;
+          } else {
+            pairs.push([text[i], text[i + 1]]);
+          }
+        }
+        steps.push(`Các cặp: ${pairs.map((p) => p.join("")).join(" ")}`);
+        let res = "";
+        for (let [a, b] of pairs) {
+          let pa = pos[a],
+            pb = pos[b],
+            ra,
+            rb;
+          if (pa.r === pb.r) {
+            ra = grid[pa.r][mod(pa.c + (enc ? 1 : -1), 5)];
+            rb = grid[pb.r][mod(pb.c + (enc ? 1 : -1), 5)];
+            steps.push(`${a}${b} (cùng hàng) → ${ra}${rb}`);
+          } else if (pa.c === pb.c) {
+            ra = grid[mod(pa.r + (enc ? 1 : -1), 5)][pa.c];
+            rb = grid[mod(pb.r + (enc ? 1 : -1), 5)][pb.c];
+            steps.push(`${a}${b} (cùng cột) → ${ra}${rb}`);
+          } else {
+            ra = grid[pa.r][pb.c];
+            rb = grid[pb.r][pa.c];
+            steps.push(`${a}${b} (hình chữ nhật) → ${ra}${rb}`);
+          }
+          res += ra + rb;
+        }
+        document.getElementById("pResult").textContent = res;
+        document.getElementById("pResult").className = "result-box success";
+        document.getElementById("pSteps").textContent = steps.join("\n");
+      }
+
+      // --- RAIL FENCE ---
+      function doRailFence() {
+        const text = document.getElementById("rfText").value;
+        const rails = parseInt(document.getElementById("rfKey").value);
+        const enc = document.getElementById("rfMode").value === "enc";
+        let steps = [],
+          res = "";
+        if (enc) {
+          let fence = Array.from({ length: rails }, () => []);
+          let r = 0,
+            dir = 1;
+          for (let ch of text) {
+            fence[r].push(ch);
+            if (r === 0) dir = 1;
+            if (r === rails - 1) dir = -1;
+            r += dir;
+          }
+          steps.push("Hàng rào:");
+          fence.forEach((row, i) => steps.push(`Rail ${i}: ${row.join(" ")}`));
+          res = fence.flat().join("");
+        } else {
+          let len = text.length;
+          let idx = Array.from({ length: rails }, () => []);
+          let r = 0,
+            dir = 1;
+          for (let i = 0; i < len; i++) {
+            idx[r].push(i);
+            if (r === 0) dir = 1;
+            if (r === rails - 1) dir = -1;
+            r += dir;
+          }
+          let pos = 0,
+            arr = new Array(len);
+          for (let i = 0; i < rails; i++) {
+            for (let j of idx[i]) {
+              arr[j] = text[pos++];
+            }
+            steps.push(`Rail ${i}: positions [${idx[i].join(",")}]`);
+          }
+          res = arr.join("");
+        }
+        document.getElementById("rfResult").textContent = res;
+        document.getElementById("rfResult").className = "result-box success";
+        document.getElementById("rfSteps").textContent = steps.join("\n");
+      }
+
+      // --- RSA ---
+      function doRSA() {
+        const p = parseInt(document.getElementById("rP").value);
+        const q = parseInt(document.getElementById("rQ").value);
+        const e = parseInt(document.getElementById("rE").value);
+        const M = parseInt(document.getElementById("rM").value);
+        let steps = [];
+        if (!isPrime(p) || !isPrime(q)) {
+          document.getElementById("rResult").textContent =
+            "p và q phải là số nguyên tố!";
+          return;
+        }
+        const n = p * q;
+        const phi = (p - 1) * (q - 1);
+        steps.push(`n = p×q = ${p}×${q} = ${n}`);
+        steps.push(`φ(n) = (p-1)(q-1) = ${p - 1}×${q - 1} = ${phi}`);
+        if (gcd(e, phi) !== 1) {
+          document.getElementById("rResult").textContent =
+            `gcd(e,φ(n)) = gcd(${e},${phi}) ≠ 1!`;
+          return;
+        }
+        const d = modInverse(e, phi);
+        steps.push(`d = e⁻¹ mod φ(n) = ${e}⁻¹ mod ${phi} = ${d}`);
+        steps.push(
+          `\nPublic Key: (e=${e}, n=${n})\nPrivate Key: (d=${d}, n=${n})`,
+        );
+        const C = modPow(M, e, n);
+        steps.push(`\nMã hóa: C = M^e mod n = ${M}^${e} mod ${n} = ${C}`);
+        const M2 = modPow(C, d, n);
+        steps.push(`Giải mã: M = C^d mod n = ${C}^${d} mod ${n} = ${M2}`);
+        document.getElementById("rResult").textContent =
+          `Public Key: (${e}, ${n})\nPrivate Key: (${d}, ${n})\nCiphertext C = ${C}\nDecrypted M = ${M2}`;
+        document.getElementById("rResult").className = "result-box success";
+        document.getElementById("rSteps").textContent = steps.join("\n");
+      }
+
+      // --- DH ---
+      function doDH() {
+        const p = parseInt(document.getElementById("dhP").value);
+        const g = parseInt(document.getElementById("dhG").value);
+        const a = parseInt(document.getElementById("dhA").value);
+        const b = parseInt(document.getElementById("dhB").value);
+        let steps = [];
+        steps.push(`p = ${p}, g = ${g}`);
+        const A = modPow(g, a, p);
+        steps.push(`Alice: A = g^a mod p = ${g}^${a} mod ${p} = ${A}`);
+        const B = modPow(g, b, p);
+        steps.push(`Bob:   B = g^b mod p = ${g}^${b} mod ${p} = ${B}`);
+        const sA = modPow(B, a, p);
+        steps.push(`Alice: s = B^a mod p = ${B}^${a} mod ${p} = ${sA}`);
+        const sB = modPow(A, b, p);
+        steps.push(`Bob:   s = A^b mod p = ${A}^${b} mod ${p} = ${sB}`);
+        steps.push(
+          `\nShared secret: ${sA} ${sA === sB ? "✓ Khớp!" : "✗ Không khớp!"}`,
+        );
+        document.getElementById("dhResult").textContent =
+          `A = ${A}, B = ${B}\nShared Secret = ${sA}`;
+        document.getElementById("dhResult").className = "result-box success";
+        document.getElementById("dhSteps").textContent = steps.join("\n");
+      }
+
+      // --- MOD MATH ---
+      function doModMath() {
+        const op = document.getElementById("mmOp").value;
+        const a = parseInt(document.getElementById("mmA").value);
+        const b = parseInt(document.getElementById("mmB").value);
+        let steps = [],
+          res = "";
+        if (op === "modinv") {
+          const inv = modInverse(a, b);
+          if (inv === null) {
+            res = `${a}⁻¹ mod ${b} không tồn tại (gcd≠1)`;
+            steps.push(`gcd(${a},${b}) = ${gcd(a, b)} ≠ 1`);
+          } else {
+            res = `${a}⁻¹ mod ${b} = ${inv}`;
+            let [g, x, y] = extGcd(a, b);
+            steps.push(`Extended GCD: ${a}·(${x}) + ${b}·(${y}) = ${g}`);
+            steps.push(`x mod ${b} = ${mod(x, b)} = ${inv}`);
+          }
+        } else if (op === "modpow") {
+          const m = parseInt(document.getElementById("mmC").value);
+          const r = modPow(a, b, m);
+          res = `${a}^${b} mod ${m} = ${r}`;
+          steps.push(`Sử dụng bình phương liên tiếp (square-and-multiply)`);
+          steps.push(`Kết quả: ${r}`);
+        } else if (op === "gcd") {
+          let x = Math.abs(a),
+            y = Math.abs(b);
+          steps.push(`Euclid's Algorithm:`);
+          while (y) {
+            steps.push(
+              `gcd(${x}, ${y}) → ${x} = ${Math.floor(x / y)}·${y} + ${x % y}`,
+            );
+            [x, y] = [y, x % y];
+          }
+          res = `GCD(${a}, ${b}) = ${x}`;
+        } else {
+          let [g, x, y] = extGcd(a, b);
+          res = `GCD=${g}, x=${x}, y=${y}\n${a}·(${x}) + ${b}·(${y}) = ${g}`;
+          steps.push(`Extended Euclidean Algorithm`);
+          steps.push(`${a}·(${x}) + ${b}·(${y}) = ${g}`);
+        }
+        document.getElementById("mmResult").textContent = res;
+        document.getElementById("mmResult").className = "result-box success";
+        document.getElementById("mmSteps").textContent = steps.join("\n");
+      }
+      // ── Helpers ──
+      function eulerPhi(n){let phi=n,m=n;for(let p=2;p*p<=m;p++){if(m%p===0){while(m%p===0)m=Math.floor(m/p);phi-=Math.floor(phi/p);}}if(m>1)phi-=Math.floor(phi/m);return phi;}
+      function out(id,res,steps){document.getElementById(id+'Result').textContent=res;document.getElementById(id+'Result').className='result-box success';document.getElementById(id+'Steps').textContent=Array.isArray(steps)?steps.join('\n'):steps;}
+
+      // ── Biểu Thức Modulo ──
+      function doBT(){
+        const expr=document.getElementById('btExpr').value,n=parseInt(document.getElementById('btN').value);
+        try{const raw=Function('"use strict";return('+expr+')')(),res=((raw%n)+n)%n;
+          out('bt',`(${expr}) mod ${n} = ${res}`,['Giá trị biểu thức = '+raw,'mod '+n+' = '+res]);}
+        catch(e){document.getElementById('btResult').textContent='Lỗi: '+e.message;}
+      }
+
+      // ── Căn Nguyên Thủy ──
+      function doCN(){
+        const n=parseInt(document.getElementById('cnN').value),phi=eulerPhi(n);
+        let roots=[],steps=[`φ(${n}) = ${phi}`];
+        for(let g=2;g<n;g++){
+          if(gcd(g,n)!==1)continue;
+          let r=g,o=1;while(r!==1){r=r*g%n;o++;}
+          if(o===phi){roots.push(g);steps.push(`g=${g}: ord=${o} ✓`);}
+          else steps.push(`g=${g}: ord=${o} ✗`);
+          if(roots.length>=20)break;
+        }
+        out('cn',roots.length?'Căn nguyên thủy: '+roots.join(', '):'Không tìm thấy',steps);
+      }
+
+      // ── Euclid Extended ──
+      function doEC(){
+        const a=parseInt(document.getElementById('ecA').value),b=parseInt(document.getElementById('ecB').value);
+        let x0=a,x1=b,s0=1,s1=0,t0=0,t1=1,steps=[`Extended GCD(${a}, ${b})`];
+        while(x1!==0){const q=Math.floor(x0/x1);steps.push(`${x0}=${q}×${x1}+${x0%x1}  (s=${s0},t=${t0})`);[x0,x1]=[x1,x0-q*x1];[s0,s1]=[s1,s0-q*s1];[t0,t1]=[t1,t0-q*t1];}
+        out('ec',`GCD=${x0},  x=${s0},  y=${t0}\n${a}·(${s0}) + ${b}·(${t0}) = ${x0}`,steps);
+      }
+
+      // ── Euler φ(n) ──
+      function doEU(){
+        const n=parseInt(document.getElementById('euN').value);
+        let phi=n,m=n,steps=[`Bắt đầu: φ=${n}`];
+        for(let p=2;p*p<=m;p++){if(m%p===0){while(m%p===0)m=Math.floor(m/p);phi-=Math.floor(phi/p);steps.push(`p=${p}: φ→${phi}`);}}
+        if(m>1){phi-=Math.floor(phi/m);steps.push(`p=${m} (nguyên tố còn lại): φ→${phi}`);}
+        out('eu',`φ(${n}) = ${phi}`,steps);
+      }
+
+      // ── Euler Lũy Thừa ──
+      function doELT(){
+        const a=parseInt(document.getElementById('eltA').value),b=parseInt(document.getElementById('eltB').value),n=parseInt(document.getElementById('eltN').value);
+        const phi=eulerPhi(n),g=gcd(a,n),steps=[`φ(${n})=${phi}`,`gcd(${a},${n})=${g}`];
+        let res;
+        if(g===1){const br=mod(b,phi);steps.push(`gcd=1 → ${a}^${b} ≡ ${a}^(${b} mod ${phi}) = ${a}^${br} (mod ${n})`);res=modPow(a,br,n);steps.push(`= ${res}`);}
+        else{steps.push('gcd≠1, tính trực tiếp (square-and-multiply)');res=modPow(a,b,n);steps.push(`= ${res}`);}
+        out('elt',`${a}^${b} mod ${n} = ${res}`,steps);
+      }
+
+      // ── Fermat Nhỏ ──
+      function doFT(){
+        const a=parseInt(document.getElementById('ftA').value),p=parseInt(document.getElementById('ftP').value),b=parseInt(document.getElementById('ftB').value);
+        let steps=[`Định lý Fermat: a^(p-1) ≡ 1 (mod p) nếu p nguyên tố và gcd(a,p)=1`];
+        if(!isPrime(p)){out('ft','Lỗi: p không phải số nguyên tố!','');return;}
+        if(gcd(a,p)!==1){out('ft','Lỗi: gcd(a,p) ≠ 1!','');return;}
+        const r=modPow(a,p-1,p);steps.push(`${a}^${p-1} mod ${p} = ${r} ${r===1?'✓':'✗'}`);
+        const bRed=mod(b,p-1),rb=modPow(a,bRed,p);
+        steps.push(`\nTính ${a}^${b} mod ${p}:`,'b mod (p-1) = '+b+' mod '+(p-1)+' = '+bRed,`${a}^${bRed} mod ${p} = ${rb}`);
+        out('ft',`a^(p-1) mod p = ${r}\n${a}^${b} mod ${p} = ${rb}`,steps);
+      }
+
+      // ── Hạ Bậc Lũy Thừa ──
+      function doHBL(){
+        const a=parseInt(document.getElementById('hblA').value),b=parseInt(document.getElementById('hblB').value),n=parseInt(document.getElementById('hblN').value);
+        const phi=eulerPhi(n),steps=[`Mục tiêu: ${a}^${b} mod ${n}`,`φ(${n}) = ${phi}`,`b nhị phân: ${b.toString(2)}`];
+        let res;
+        if(gcd(a,n)===1){const br=mod(b,phi);steps.push(`Hạ bậc: ${b} mod ${phi} = ${br}`,`${a}^${b} ≡ ${a}^${br} (mod ${n})`);res=modPow(a,br,n);steps.push(`= ${res}`);}
+        else{steps.push('gcd(a,n)≠1, tính trực tiếp');res=modPow(a,b,n);steps.push(`= ${res}`);}
+        out('hbl',`${a}^${b} mod ${n} = ${res}`,steps);
+      }
+
+      // ── Logarithm Rời Rạc (Baby-step Giant-step) ──
+      function doLOG(){
+        const g=parseInt(document.getElementById('logG').value),h=parseInt(document.getElementById('logH').value),p=parseInt(document.getElementById('logP').value);
+        const m=Math.ceil(Math.sqrt(p));let steps=[`Tìm x: ${g}^x ≡ ${h} (mod ${p})`,`m=⌈√${p}⌉=${m}`];
+        const table={};for(let j=0;j<m;j++)table[modPow(g,j,p)]=j;
+        steps.push(`Baby steps: g^j mod p, j=0..${m-1}`);
+        const gInvM=modPow(modInverse(g,p),m,p);steps.push(`g^(-m) mod p = ${gInvM}`);
+        let gamma=h,res=null;
+        for(let i=0;i<m;i++){
+          if(table[gamma]!==undefined){res=i*m+table[gamma];steps.push(`Match i=${i}, j=${table[gamma]} → x=${res}`);break;}
+          gamma=gamma*gInvM%p;
+        }
+        if(res===null){out('log','Không tìm thấy x trong phạm vi',steps);return;}
+        out('log',`x = ${res}\nKiểm tra: ${g}^${res} mod ${p} = ${modPow(g,res,p)}`,steps);
+      }
+
+      // ── CRT Giải Hệ PT ──
+      function doCRT(){
+        const rows=[[document.getElementById('cr0r'),document.getElementById('cr0m')],[document.getElementById('cr1r'),document.getElementById('cr1m')],[document.getElementById('cr2r'),document.getElementById('cr2m')]].map(([r,m])=>({r:parseInt(r.value),m:parseInt(m.value)}).m>0?{r:parseInt(r.value),m:parseInt(m.value)}:null).filter(Boolean);
+        // Re-read cleanly
+        const eqs=[];
+        for(let i=0;i<3;i++){const r=parseInt(document.getElementById(`cr${i}r`).value),m=parseInt(document.getElementById(`cr${i}m`).value);if(m>0)eqs.push({r,m});}
+        let steps=['Hệ phương trình:'];eqs.forEach(e=>steps.push(`x ≡ ${e.r} (mod ${e.m})`));
+        const M=eqs.reduce((a,e)=>a*e.m,1);steps.push(`\nM = ${eqs.map(e=>e.m).join('×')} = ${M}`);
+        let x=0;
+        for(let i=0;i<eqs.length;i++){const Mi=M/eqs[i].m,MiInv=modInverse(Mi,eqs[i].m);steps.push(`M${i+1}=${Mi}, M${i+1}⁻¹ mod ${eqs[i].m}=${MiInv}, term=${eqs[i].r}*${Mi}*${MiInv}=${eqs[i].r*Mi*MiInv}`);x+=eqs[i].r*Mi*MiInv;}
+        x=mod(x,M);steps.push(`\nx = ${x} (mod ${M})`);
+        out('crt',`x ≡ ${x} (mod ${M})`,steps);
+      }
+
+      // ── CRT Lũy Thừa ──
+      function doCLT(){
+        const a=parseInt(document.getElementById('cltA').value),b=parseInt(document.getElementById('cltB').value),p=parseInt(document.getElementById('cltP').value),q=parseInt(document.getElementById('cltQ').value),n=p*q;
+        let steps=[`Tính ${a}^${b} mod ${n} = ${a}^${b} mod (${p}×${q}) bằng CRT`];
+        const rp=modPow(a,b,p),rq=modPow(a,b,q);steps.push(`${a}^${b} mod ${p} = ${rp}`,`${a}^${b} mod ${q} = ${rq}`);
+        const qInv=modInverse(q,p),pInv=modInverse(p,q);steps.push(`q⁻¹ mod p = ${qInv}`,`p⁻¹ mod q = ${pInv}`);
+        const res=mod(rp*q*qInv+rq*p*pInv,n);steps.push(`x = ${rp}*${q}*${qInv} + ${rq}*${p}*${pInv} mod ${n} = ${res}`);
+        out('clt',`${a}^${b} mod ${n} = ${res}`,steps);
+      }
+
+      // ── ElGamal ──
+      function doEG(){
+        const p=parseInt(document.getElementById('egP').value),g=parseInt(document.getElementById('egG').value),x=parseInt(document.getElementById('egX').value),k=parseInt(document.getElementById('egK').value),M=parseInt(document.getElementById('egM').value),enc=document.getElementById('egMode').value==='enc';
+        const y=modPow(g,x,p);let steps=[`y = g^x mod p = ${g}^${x} mod ${p} = ${y}`],res;
+        if(enc){const C1=modPow(g,k,p),C2=mod(M*modPow(y,k,p),p);steps.push(`C1=${C1}, C2=${C2}`);res=`C1 = ${C1}\nC2 = ${C2}`;}
+        else{const C1=parseInt(document.getElementById('egC1').value),C2=parseInt(document.getElementById('egC2').value),s=modPow(C1,x,p),sInv=modInverse(s,p),dec=mod(C2*sInv,p);steps.push(`s=C1^x mod p=${s}`,`s⁻¹=${sInv}`,`M=C2·s⁻¹ mod p=${dec}`);res=`M = ${dec}`;}
+        out('eg',res,steps);
+      }
+
+      // ── RSA Cơ Bản ──
+      function doR1(){
+        const p=parseInt(document.getElementById('r1P').value),q=parseInt(document.getElementById('r1Q').value),e=parseInt(document.getElementById('r1E').value),mode=document.getElementById('r1Mode').value,input=document.getElementById('r1Input').value;
+        if(!isPrime(p)||!isPrime(q)){out('r1','p, q phải nguyên tố','');return;}
+        const n=p*q,phi=(p-1)*(q-1);if(gcd(e,phi)!==1){out('r1','gcd(e,φ(n))≠1','');return;}
+        const d=modInverse(e,phi);let steps=[`n=${n}, φ(n)=${phi}`,`Public:(e=${e},n=${n})`,`Private:(d=${d},n=${n})`];
+        const nums=input.split(',').map(s=>parseInt(s.trim())).filter(v=>!isNaN(v));
+        const out2=nums.map(m=>{const r=mode==='enc'?modPow(m,e,n):modPow(m,d,n);steps.push(`${mode==='enc'?'M':'C'}=${m} → ${r}`);return r;});
+        out('r1',out2.join(', '),steps);
+      }
+
+      // ── RSA CRT Decrypt ──
+      function doR2(){
+        const p=parseInt(document.getElementById('r2P').value),q=parseInt(document.getElementById('r2Q').value),e=parseInt(document.getElementById('r2E').value),C=parseInt(document.getElementById('r2C').value);
+        if(!isPrime(p)||!isPrime(q)){out('r2','p, q phải nguyên tố','');return;}
+        const n=p*q,phi=(p-1)*(q-1),d=modInverse(e,phi);
+        const dp=mod(d,p-1),dq=mod(d,q-1),qInv=modInverse(q,p);
+        let steps=[`n=${n}, d=${d}`,`dp=d mod(p-1)=${dp}`,`dq=d mod(q-1)=${dq}`,`q⁻¹ mod p=${qInv}`];
+        const Mp=modPow(C,dp,p),Mq=modPow(C,dq,q);steps.push(`Mp=C^dp mod p=${Mp}`,`Mq=C^dq mod q=${Mq}`);
+        const h=mod(qInv*(Mp-Mq),p),M=mod(Mq+h*q,n);steps.push(`h=${h}`,`M=Mq+h·q=${M}`);
+        out('r2',`M = ${M}`,steps);
+      }
+
+      // ── DSA ──
+      function doDSA2(){
+        const p=parseInt(document.getElementById('dsaP').value),q=parseInt(document.getElementById('dsaQ').value),g=parseInt(document.getElementById('dsaG').value),x=parseInt(document.getElementById('dsaX').value),k=parseInt(document.getElementById('dsaK').value),H=parseInt(document.getElementById('dsaH').value);
+        const y=modPow(g,x,p);let steps=[`y=g^x mod p=${y}`];
+        const r=mod(modPow(g,k,p),q),kInv=modInverse(k,q),s=mod(kInv*(H+x*r),q);
+        steps.push(`r=(g^k mod p) mod q=${r}`,`s=k⁻¹(H+x·r) mod q=${s}`,`Chữ ký: (r=${r}, s=${s})`);
+        const w=modInverse(s,q),u1=mod(H*w,q),u2=mod(r*w,q),v=mod(mod(modPow(g,u1,p)*modPow(y,u2,p),p),q);
+        steps.push(`\nXác minh:`,`w=s⁻¹ mod q=${w}`,`u1=${u1}, u2=${u2}`,`v=${v}  ${v===r?'= r ✓ HỢP LỆ':'≠ r ✗ KHÔNG HỢP LỆ'}`);
+        out('dsa',`Chữ ký: (${r}, ${s})\nXác minh: ${v===r?'HỢP LỆ ✓':'KHÔNG HỢP LỆ ✗'}`,steps);
+      }
+
+      // ── AES-128 ──
+      (function(){
+        const SB=new Uint8Array([99,124,119,123,242,107,111,197,48,1,103,43,254,215,171,118,202,130,201,125,250,89,71,240,173,212,162,175,156,164,114,192,183,253,147,38,54,63,247,204,52,165,229,241,113,216,49,21,4,199,35,195,24,150,5,154,7,18,128,226,235,39,178,117,9,131,44,26,27,110,90,160,82,59,214,179,41,227,47,132,83,209,0,237,32,252,177,91,106,203,190,57,74,76,88,207,208,239,170,251,67,77,51,133,69,249,2,127,80,60,159,168,81,163,64,143,146,157,56,245,188,182,218,33,16,255,243,210,205,12,19,236,95,151,68,23,196,167,126,61,100,93,25,115,96,129,79,220,34,42,144,136,70,238,184,20,222,94,11,219,224,50,58,10,73,6,36,92,194,211,172,98,145,149,228,121,231,200,55,109,141,213,78,169,108,86,244,234,101,122,174,8,186,120,37,46,28,166,180,198,232,221,116,31,75,189,139,138,112,62,181,102,72,3,246,14,97,53,87,185,134,193,29,158,225,248,152,17,105,217,142,148,155,30,135,233,206,85,40,223,140,161,137,13,191,230,66,104,65,153,45,15,176,84,187,22]);
+        const ISB=new Uint8Array(256);SB.forEach((v,i)=>ISB[v]=i);
+        const RC=[0x01,0x02,0x04,0x08,0x10,0x20,0x40,0x80,0x1b,0x36];
+        function xtime(a){return((a<<1)^(a&0x80?0x1b:0))&0xff}
+        function gmul(a,b){let r=0;for(let i=0;i<8;i++){if(b&1)r^=a;b>>=1;a=xtime(a)}return r}
+        function expandKey(k){
+          const w=[];for(let i=0;i<4;i++)w.push([k[4*i],k[4*i+1],k[4*i+2],k[4*i+3]]);
+          for(let i=4;i<44;i++){let t=[...w[i-1]];if(i%4===0){t=[t[1],t[2],t[3],t[0]].map(b=>SB[b]);t[0]^=RC[i/4-1];}w.push(w[i-4].map((b,j)=>b^t[j]));}
+          return w;
+        }
+        function addRK(s,w,r){for(let c=0;c<4;c++)for(let row=0;row<4;row++)s[row][c]^=w[r*4+c][row];return s;}
+        function subB(s,box){return s.map(r=>r.map(b=>box[b]));}
+        function shiftR(s){return s.map((r,i)=>[...r.slice(i),...r.slice(0,i)]);}
+        function iShiftR(s){return s.map((r,i)=>[...r.slice(4-i),...r.slice(0,4-i)]);}
+        function mixC(s){return s[0].map((_,c)=>{const col=s.map(r=>r[c]);return[gmul(2,col[0])^gmul(3,col[1])^col[2]^col[3],col[0]^gmul(2,col[1])^gmul(3,col[2])^col[3],col[0]^col[1]^gmul(2,col[2])^gmul(3,col[3]),gmul(3,col[0])^col[1]^col[2]^gmul(2,col[3])];}).reduce((a,col)=>{col.forEach((v,r)=>a[r].push(v));return a;},[[],[],[],[]]);}
+        function iMixC(s){return s[0].map((_,c)=>{const col=s.map(r=>r[c]);return[gmul(14,col[0])^gmul(11,col[1])^gmul(13,col[2])^gmul(9,col[3]),gmul(9,col[0])^gmul(14,col[1])^gmul(11,col[2])^gmul(13,col[3]),gmul(13,col[0])^gmul(9,col[1])^gmul(14,col[2])^gmul(11,col[3]),gmul(11,col[0])^gmul(13,col[1])^gmul(9,col[2])^gmul(14,col[3])];}).reduce((a,col)=>{col.forEach((v,r)=>a[r].push(v));return a;},[[],[],[],[]]);}
+        function stateToHex(s){return s[0].map((_,c)=>s.map(r=>r[c].toString(16).padStart(2,'0'))).flat().join('');}
+        function hexToState(h){const b=[];for(let i=0;i<32;i+=2)b.push(parseInt(h.substr(i,2),16));const s=[[],[],[],[]];for(let c=0;c<4;c++)for(let r=0;r<4;r++)s[r].push(b[r+4*c]);return s;}
+        window.doAES=function(){
+          const ph=document.getElementById('aesPlain').value.replace(/\s/g,''),kh=document.getElementById('aesKey').value.replace(/\s/g,''),enc=document.getElementById('aesMode').value==='enc';
+          if(ph.length!==32||kh.length!==32){out('aes','Plaintext và Key phải đúng 32 ký tự hex (16 bytes)','');return;}
+          const key=[];for(let i=0;i<32;i+=2)key.push(parseInt(kh.substr(i,2),16));
+          const w=expandKey(key);let s=hexToState(ph),steps=[];
+          steps.push(`Key: ${kh}`);steps.push(`Input: ${ph}`);
+          if(enc){
+            s=addRK(s,w,0);steps.push(`Round 0 AddRoundKey: ${stateToHex(s)}`);
+            for(let r=1;r<=10;r++){s=subB(s,SB);s=shiftR(s);if(r<10)s=mixC(s);s=addRK(s,w,r);steps.push(`Round ${r}: ${stateToHex(s)}`);}
+          }else{
+            s=addRK(s,w,10);steps.push(`Round 0 AddRoundKey: ${stateToHex(s)}`);
+            for(let r=9;r>=0;r--){s=iShiftR(s);s=subB(s,ISB);s=addRK(s,w,r);if(r>0)s=iMixC(s);steps.push(`Round ${10-r}: ${stateToHex(s)}`);}
+          }
+          out('aes',stateToHex(s),steps);
+        };
+      })();
+    </script>
+  </body>
+</html>
